@@ -2,31 +2,31 @@ class Plant:
     def __init__(self, name: str, height: int, age: int) -> None:
         self.name = name
         self.height = height
-        self.age = age
+        self.init_age = age
+        self.added_height = 0
 
-    def grow(self, age):
-        self.height += age
+    def grow(self, growing_height: int) -> None:
+        self.added_height += growing_height
+        self.height += self.added_height
 
-    def grow_age(self, days):
-        self.age += days - 1
+    def age(self) -> None:
+        self.init_age += 6
 
-    def get_info(self, growing: list[list[int]]):
-        total_height_growing = 0
-        for i in range(len(growing)):
-            print(f"=== Day {growing[i][1]} ===")
-            self.grow(growing[i][0])
-            self.grow_age(growing[i][1])
-            total_height_growing += growing[i][0];
-            print(f"{self.name}: {self.height}cm, {self.age} days old")
-        if (growing[-1][1] <= 7):
-            print(f"Growth this week: +{total_height_growing}cm")
-        else:
-            print(f"Growth in {growing[len(growing) - 1][1]} Days: +{total_height_growing}cm")
+    def get_info(self, growing_height: int) -> None:
+        rose.grow(growing_height)
+        rose.age()
+        print("=== Day 1 ===")
+        print(f"{self.name}: {self.height - self.added_height}cm", end="")
+        print(f", {self.init_age - 6} days old")
+        print("=== Day 7 ===")
+        print(f"{self.name}: {self.height}cm, {self.init_age} days old")
+        print(f"Growth this week: +{self.added_height}cm")
+
 
 if __name__ == "__main__":
     """
-
+        In the get_info method, I added a parameter that
+        represents the growing height for this week.
     """
-    obj = Plant("Rose", 25, 30)
-    growing = [[0, 1], [6, 7]]
-    obj.get_info(growing)
+    rose = Plant("Rose", 25, 30)
+    rose.get_info(8)
