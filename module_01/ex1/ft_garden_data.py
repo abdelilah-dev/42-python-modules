@@ -15,5 +15,5 @@ if __name__ == "__main__":
     plants = [plant_one, plant_two, plant_three]
 
     print("=== Garden Plant Registry ===")
-    for i in range(3):
-        print(plants[i])
+    for plant in plants:
+        print(plant)

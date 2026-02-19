@@ -21,6 +21,8 @@ def main():
         print(all_plant[i])
         i += 1
 
+    print(f"\nTotal plants created: {len(all_plant)}")
+
 
 if __name__ == "__main__":
     main()
