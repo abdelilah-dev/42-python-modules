@@ -4,28 +4,34 @@ class Plant:
         self.height = height
         self.age = age
 
-    classmethod
-
 
 class Flower(Plant):
     def __init__(self, name: str, height: int, age: int, color: str) -> None:
         super().__init__(name, height, age)
         self.color = "read"
-        print(f"{name} (Flower): {height}cm, {age} days, {color} color")
 
     def bloom(self):
-        print(f"{self.name} is blooming beautifully!\n")
+        print(f"{self.name} is blooming beautifully!")
+
+    def get_info(self):
+        print(f"{self.name} (Flower): {self.height}cm, ", end="")
+        print(f"{self.age} days, {self.color} color")
+        self.bloom()
 
 
 class Tree(Plant):
     def __init__(self, name: str, height: int, age: int, dia: int) -> None:
         super().__init__(name, height, age)
         self.diameter = dia
-        print(f"{name} (Tree): {height}cm, {age} days, {dia}cm diameter")
 
     def produce_shade(self):
         shade: float = 3.1416 * (((self.diameter / 2) * 0.01) ** 2)
-        print(f"{self.name} provides {shade:.2f} square meters of shade\n")
+        print(f"{self.name} provides {shade:.2f} square meters of shade")
+
+    def get_info(self):
+        print(f"{self.name} (Tree): {self.height}cm, ", end="")
+        print(f"{self.age} days, {self.diameter}cm diameter")
+        self.produce_shade()
 
 
 class Vegetable(Plant):
@@ -34,33 +40,32 @@ class Vegetable(Plant):
         super().__init__(name, height, age)
         self.haverst_season = season
         self.natur_value = grade
+
+    def get_info(self):
         print(f"{self.name} (Vegetable): {self.height}cm,", end="")
-        print(" {self.age} days, {self.haverst_season} harvest")
-
-
-    def nutritional_value(self):
-        print(f"{self.name} is rich in vitamin {self.natur_value}\n")
+        print(f" {self.age} days, {self.haverst_season} harvest")
+        print(f"{self.name} is rich in vitamin {self.natur_value}")
 
 
 def plant_types():
     print("=== Garden Plant Types ===\n")
     rose = Flower("Rose", 25, 30, "red")
-    rose.bloom()
+    rose.get_info()
 
     dak = Tree("Dak", 500, 1825, 50)
-    dak.produce_shade()
+    dak.get_info
 
     tomato = Vegetable("Tomato", 80, 90, "summer", "C")
-    tomato.nutritional_value()
+    tomato.get_info()
 
     sunflower = Flower("Sunflower", 180, 75, "yellow")
-    sunflower.bloom()
+    sunflower.get_info()
 
     maple = Tree("Maple", 1200, 3650, 900)
-    maple.produce_shade()
+    maple.get_info()
 
     cucumber = Vegetable("Cucumber", 40, 70, "summer", "B")
-    cucumber.nutritional_value()
+    cucumber.get_info()
 
 
 if __name__ == "__main__":

@@ -57,11 +57,12 @@ class Garden:
 
     def help_to_grow(self, unit):
         if (unit > 0):
-            print(f"\n{self.name} is helping all plants grow...")
+            print(f"{self.name} is helping all plants grow...")
             i = 0
             while i < len(self.plants):
                 self.plants[i].height += unit
                 self.t_growing += unit
+                self.score += 1
                 print(f"{self.plants[i].name} grew {unit}cm")
                 i += 1
 
@@ -85,25 +86,27 @@ class GardenManager:
 
     def manager_summary(self):
         print(f"Garden scores - ", end="")
-        for garden in self.gardens:
-            print(f" {garden.name}: {garden.score},", end="")
+        for i in range(len(self.gardens)):
+            if i != 0:
+                print(", ", end="")
+            print(f"{self.gardens[i].name}: {self.gardens[i].score}", end="")
         print(f"\nTotal gardens managed: {len(self.gardens)}")
 
     class GardenStats:
         def display_stat(self, garden: Garden) -> None:
-            print("\n=== Alice's Garden Report ===")
+            print("\n=== Alice's Garden Report ===\n")
             self.plants_stat(garden)
             self.statistics(garden)
 
         def plants_stat(self, garden: Garden) -> None:
-            print("\nPlants in garden:")
+            print("Plants in garden:")
             i = 0
             while i < len(garden.plants):
                 garden.plants[i].summary()
                 i += 1
 
         def statistics(self, garden: Garden) -> None:
-            print(f"\nPlants added: {len(garden.plants)}, Total growth: {garden.t_growing}cm")
+            print(f"Plants added: {len(garden.plants)}, Total growth: {garden.t_growing}cm")
             p_type = []
             i = 0
             while i < len(garden.plants):

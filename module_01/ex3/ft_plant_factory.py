@@ -16,6 +16,7 @@ def main():
     p_five = Plant("Fern", 15, 120)
     all_plant: list[Plant] = [p_one, p_two, p_three, p_four, p_five]
     i = 0
+
     print("=== Plant Factory Output ===")
     while i in range(len(all_plant)):
         print(all_plant[i])
