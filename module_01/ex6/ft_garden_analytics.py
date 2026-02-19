@@ -4,16 +4,16 @@ class Plant:
         self.height = height
         self.__type = "regular"
 
-    def height_validation(self):
+    def height_validation(self) -> None:
         if (self.height > 0):
             print("Height validation test: True")
         else:
             print("Height validation test: False")
 
-    def get_type(self):
+    def get_type(self) -> str:
         return self.__type
 
-    def summary(self):
+    def summary(self) -> None:
         print(f"- {self.name}: {self.height}cm")
 
 
@@ -23,11 +23,12 @@ class FloweringPlant(Plant):
         self.color = color
         self.__type = "flowering"
 
-    def get_type(self):
+    def get_type(self) -> str:
         return self.__type
 
-    def summary(self):
-        print(f"- {self.name}: {self.height}cm, {self.color} flowers (blooming)")
+    def summary(self) -> None:
+        print(f"- {self.name}: {self.height}cm,",
+              f"{self.color} flowers (blooming)")
 
 
 class PrizeFlower(FloweringPlant):
@@ -36,26 +37,26 @@ class PrizeFlower(FloweringPlant):
         self.prize_point = prize
         self.__type = "prize flowers"
 
-    def get_type(self):
+    def get_type(self) -> str:
         return self.__type
 
-    def summary(self):
-        print(f"- {self.name}: {self.height}cm, {self.height}", end="")
-        print(f" flowers (blooming), Prize points: {self.prize_point}")
+    def summary(self) -> None:
+        print(f"- {self.name}: {self.height}cm, {self.height}",
+              f" flowers (blooming), Prize points: {self.prize_point}")
 
 
 class Garden:
-    def __init__(self, name, score):
+    def __init__(self, name: str, score: int) -> None:
         self.name = name
         self.t_growing = 0
         self.score = score
         self.plants: list[Plant] = []
 
-    def add_plant(self, plant: Plant):
+    def add_plant(self, plant: Plant) -> None:
         self.plants.append(plant)
         print(f"Added {plant.name} to {self.name}'s garden")
 
-    def help_to_grow(self, unit):
+    def help_to_grow(self, unit: int) -> None:
         if (unit > 0):
             print(f"{self.name} is helping all plants grow...")
             i = 0
@@ -74,18 +75,19 @@ class GardenManager:
         self.state = self.GardenStats()
 
     @classmethod
-    def add_garden(cls, garden: Garden):
+    def add_garden(cls, garden: Garden) -> None:
         cls.gardens.append(garden)
 
-    def create_garden_network(self, garden: Garden,
+    @staticmethod
+    def create_garden_network(garden: Garden,
                               garden_network: list[Plant]) -> None:
         i = 0
         while i < len(garden_network):
             garden.add_plant(garden_network[i])
             i += 1
 
-    def manager_summary(self):
-        print(f"Garden scores - ", end="")
+    def manager_summary(self) -> None:
+        print("Garden scores - ", end="")
         for i in range(len(self.gardens)):
             if i != 0:
                 print(", ", end="")
@@ -105,8 +107,10 @@ class GardenManager:
                 garden.plants[i].summary()
                 i += 1
 
-        def statistics(self, garden: Garden) -> None:
-            print(f"Plants added: {len(garden.plants)}, Total growth: {garden.t_growing}cm")
+        @staticmethod
+        def statistics(garden: Garden) -> None:
+            print(f"Plants added: {len(garden.plants)},",
+                  f"Total growth: {garden.t_growing}cm")
             p_type = []
             i = 0
             while i < len(garden.plants):
@@ -117,14 +121,14 @@ class GardenManager:
             while i < len(garden.plants):
                 if (i):
                     print(", ", end="")
-                print(f"{p_type.count(garden.plants[i].get_type())}", end="")
-                print(f" {garden.plants[i].get_type()}", end="")
+                print(f"{p_type.count(garden.plants[i].get_type())}",
+                      f" {garden.plants[i].get_type()}", end="")
                 if (i == len(garden.plants) - 1):
-                    print("\n")
+                    print("\n", end="")
                 i += 1
 
 
-def main():
+def main() -> None:
     print("=== Garden Management System Demo ===\n")
     garden_manager = GardenManager()
 

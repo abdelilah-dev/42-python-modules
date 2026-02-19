@@ -8,7 +8,7 @@ class Plant:
         return f"Created: {self.name} ({self.height}cm, {self.age} days)"
 
 
-def main():
+def main() -> None:
     p_one = Plant("Rose", 25, 30)
     p_two = Plant("Dak", 200, 365)
     p_three = Plant("Cactus", 5, 90)
