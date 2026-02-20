@@ -14,7 +14,7 @@ class Flower(Plant):
         print(f"{self.name} is blooming beautifully!")
 
     def get_info(self) -> None:
-        print(f"{self.name} (Flower): {self.height}cm, ",
+        print(f"\n{self.name} (Flower): {self.height}cm, ",
               f"{self.age} days, {self.color} color")
         self.bloom()
 
@@ -29,7 +29,7 @@ class Tree(Plant):
         print(f"{self.name} provides {shade:.2f} square meters of shade")
 
     def get_info(self) -> None:
-        print(f"{self.name} (Tree): {self.height}cm, ",
+        print(f"\n{self.name} (Tree): {self.height}cm, ",
               f"{self.age} days, {self.diameter}cm diameter")
         self.produce_shade()
 
@@ -42,9 +42,9 @@ class Vegetable(Plant):
         self.natur_value = grade
 
     def get_info(self) -> None:
-        print(f"{self.name} (Vegetable): {self.height}cm,",
-              f" {self.age} days, {self.haverst_season} harvest",
-              f"{self.name} is rich in vitamin {self.natur_value}")
+        print(f"\n{self.name} (Vegetable): {self.height}cm,",
+              f" {self.age} days, {self.haverst_season} harvest")
+        print(f"{self.name} is rich in vitamin {self.natur_value}")
 
 
 def plant_types() -> None:
@@ -53,7 +53,7 @@ def plant_types() -> None:
     rose.get_info()
 
     dak = Tree("Dak", 500, 1825, 50)
-    dak.get_info
+    dak.get_info()
 
     tomato = Vegetable("Tomato", 80, 90, "summer", "C")
     tomato.get_info()

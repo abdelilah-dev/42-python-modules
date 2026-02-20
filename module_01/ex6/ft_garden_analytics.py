@@ -6,9 +6,9 @@ class Plant:
 
     def height_validation(self) -> None:
         if (self.height > 0):
-            print("Height validation test: True")
+            print("\nHeight validation test: True")
         else:
-            print("Height validation test: False")
+            print("\nHeight validation test: False")
 
     def get_type(self) -> str:
         return self.__type
@@ -58,7 +58,7 @@ class Garden:
 
     def help_to_grow(self, unit: int) -> None:
         if (unit > 0):
-            print(f"{self.name} is helping all plants grow...")
+            print(f"\n{self.name} is helping all plants grow...")
             i = 0
             while i < len(self.plants):
                 self.plants[i].height += unit
@@ -96,7 +96,7 @@ class GardenManager:
 
     class GardenStats:
         def display_stat(self, garden: Garden) -> None:
-            print("\n=== Alice's Garden Report ===\n")
+            print("\n=== Alice's Garden Report ===")
             self.plants_stat(garden)
             self.statistics(garden)
 
@@ -109,7 +109,7 @@ class GardenManager:
 
         @staticmethod
         def statistics(garden: Garden) -> None:
-            print(f"Plants added: {len(garden.plants)},",
+            print(f"\nPlants added: {len(garden.plants)},",
                   f"Total growth: {garden.t_growing}cm")
             p_type = []
             i = 0

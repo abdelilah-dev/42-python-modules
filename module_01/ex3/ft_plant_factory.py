@@ -1,8 +1,11 @@
 class Plant:
+    counter = 0
+
     def __init__(self, name: str, height: int, age: int) -> None:
         self.name = name
         self.height = height
         self.age = age
+        Plant.counter += 1
 
     def __str__(self) -> str:
         return f"Created: {self.name} ({self.height}cm, {self.age} days)"
@@ -22,7 +25,7 @@ def main() -> None:
         print(all_plant[i])
         i += 1
 
-    print(f"\nTotal plants created: {len(all_plant)}")
+    print(f"\nTotal plants created: {Plant.counter}")
 
 
 if __name__ == "__main__":

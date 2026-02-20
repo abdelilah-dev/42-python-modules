@@ -1,5 +1,4 @@
 def check_temperature(temp_str: str) -> None:
-	print(f"\nTesting temperature: {temp_str}")
 	try:
 		value = int(temp_str)
 		if value < 0:
@@ -13,10 +12,15 @@ def check_temperature(temp_str: str) -> None:
 
 def test_temperature_input():
 	print("=== Garden Temperature Checker ===")
-	check_temperature("30")
-	check_temperature("abc")
-	check_temperature("99")
-	check_temperature("-67")
+	test_list = ["30", "abc", "99", "-67"]
+	for test in test_list:
+		print(f"\nTesting temperature: {test}")
+		try:
+			check_temperature(test)
+		except:
+			print(f"Program crashed, test failed at {test}")
+			return
+
 	print("\nAll tests completed - program didn't crash!")
 	pass
 
