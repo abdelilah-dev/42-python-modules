@@ -36,10 +36,10 @@ class Tree(Plant):
 
 class Vegetable(Plant):
     def __init__(self, name: str, height: int, age: int,
-                 season: str, grade: str) -> None:
+                 season: str, value: str) -> None:
         super().__init__(name, height, age)
         self.haverst_season = season
-        self.natur_value = grade
+        self.natur_value = value
 
     def get_info(self) -> None:
         print(f"\n{self.name} (Vegetable): {self.height}cm,",
