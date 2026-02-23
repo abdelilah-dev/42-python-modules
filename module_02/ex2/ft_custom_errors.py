@@ -3,17 +3,26 @@ class GardenError(Exception):
         self.message = message
         super().__init__(self.message)
 
+    def __str__(self) -> str:
+        return f"Caugth GardenError: {self.message}"
+
 
 class PlantError(GardenError):
     def __init__(self, message: str) -> None:
         self.message = message
         super().__init__(self.message)
 
+    def __str__(self) -> str:
+        return f"Caugth PlantError: {self.message}"
+
 
 class WaterError(GardenError):
     def __init__(self, message: str) -> None:
         self.message = message
         super().__init__(self.message)
+
+    def __str__(self) -> str:
+        return f"Caugth WaterError: {self.message}"
 
 
 class Plant:
@@ -50,14 +59,14 @@ def test_custom_errors() -> None:
             create_error(tomato)
             tomato.check_wilting_stat()
         except PlantError as error:
-            print(f"Caugth PlantError: {error}")
+            print(error)
 
         print("\nTesting WaterError...")
         try:
             create_error(tomato)
             tomato.check_water_in_tank()
         except WaterError as error:
-            print(f"Caught WaterError: {error}")
+            print(error)
 
         print("\nTesting catching all garden errors..")
 
@@ -65,13 +74,13 @@ def test_custom_errors() -> None:
             create_error(tomato)
             tomato.check_wilting_stat()
         except GardenError as error:
-            print(f"Caugth PlantError: {error}")
+            print(error)
 
         try:
             create_error(tomato)
             tomato.check_water_in_tank()
         except GardenError as error:
-            print(f"Caught WaterError: {error}")
+            print(error)
 
         print("\nAll custom error types work correctly!")
     except Exception as error:

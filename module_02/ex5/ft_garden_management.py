@@ -70,6 +70,8 @@ class GardenManager:
                 raise HealthError(f"Sunlight hours {sun} is too low (min 2)")
             else:
                 raise HealthError(f"Sunlight hours {sun} is too high (max 12)")
+        print(f"{plant.name}: healthy",
+              f"(water: {plant.water}, sun: {plant.sun})")
 
     def check_water_in_tank(self) -> None:
         if self.water_in_tank <= 0:
@@ -98,8 +100,6 @@ def test_garden_management() -> None:
         for plant in garden_manager.plants:
             try:
                 garden_manager.check_plant_health(plant)
-                print(f"{plant.name}: healthy",
-                      "(water: {plant.water}, sun: {plant.sun})")
             except HealthError as error:
                 print(f"Error checking {plant.name}: {error}")
 

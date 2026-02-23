@@ -14,6 +14,8 @@ def check_plant_health(plant_name: str,
             raise ValueError(f"Sunlight hours {slight_h} is too low (min 2)")
         else:
             raise ValueError(f"Sunlight hours {slight_h} is too high (max 12)")
+    else:
+        print(f"Plant '{plant_name}' is healthy!")
 
 
 def test_plant_checks() -> None:
@@ -21,21 +23,18 @@ def test_plant_checks() -> None:
         print("\nTesting good values...")
         try:
             check_plant_health("tomato", 5, 4)
-            print("Plant 'tomato' is healthy!")
         except ValueError as e:
             print(f"Error: {e}")
 
         print("\nTesting empty plant name...")
         try:
             check_plant_health("", 5, 4)
-            print("Plant 'tomato' is healthy!")
         except ValueError as e:
             print(f"Error: {e}")
 
         print("\nTesting bad water level...")
         try:
             check_plant_health("tomato", 12, 7)
-            print("Plant 'tomato' is healthy!")
         except ValueError as e:
             print(f"Error: {e}")
 
