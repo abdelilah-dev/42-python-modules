@@ -1,18 +1,18 @@
-def garden_operations(error_type) -> None:
-    if error_type == "ValueError":
+def garden_operations(operation_type: str) -> None:
+    if operation_type == "ValueError":
         _ = int("abc")
 
-    elif error_type == "ZeroDivisionError":
+    elif operation_type == "ZeroDivisionError":
         _ = 10 / 0
 
-    elif error_type == "FileNotFoundError":
+    elif operation_type == "FileNotFoundError":
         _ = open("missing.txt", 'r')
 
-    elif error_type == "KeyError":
+    elif operation_type == "KeyError":
         ages = {'alex': 25, 'johan': 20}
         print(ages['bob'])
 
-    elif error_type == "multi":
+    elif operation_type == "multi":
         _ = int("abc")
         _ = 10 / 0
         _ = open("missing.txt", 'r')

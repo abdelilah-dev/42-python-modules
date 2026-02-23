@@ -12,7 +12,7 @@ def check_temperature(temp_str: str) -> None:
 
 
 def test_temperature_input() -> None:
-    test_list = ["30", "abc", "99", "-67", None]
+    test_list = ["30", "abc", "99", "-67"]
     try:
         for test in test_list:
             print(f"\nTesting temperature: {test}")

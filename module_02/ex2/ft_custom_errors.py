@@ -1,46 +1,46 @@
 class GardenError(Exception):
-    def __init__(self, message) -> None:
+    def __init__(self, message: str) -> None:
         self.message = message
         super().__init__(self.message)
 
 
 class PlantError(GardenError):
-    def __init__(self, message) -> None:
+    def __init__(self, message: str) -> None:
         self.message = message
         super().__init__(self.message)
 
 
 class WaterError(GardenError):
-    def __init__(self, message) -> None:
+    def __init__(self, message: str) -> None:
         self.message = message
         super().__init__(self.message)
 
 
 class Plant:
     def __init__(self, name: str, height: int) -> None:
-        self.name = name
-        self.height = height
-        self.heat_degree = 10
-        self.water_in_tank = 5
+        self.name: str = name
+        self.height: int = height
+        self.heat_degree: int = 10
+        self.water_in_tank: int = 5
 
-    def check_heat_degree(self):
+    def check_wilting_stat(self) -> None:
         if (self.heat_degree > 30 and not self.water_in_tank):
             raise PlantError(f"The {self.name} plant is wilting!")
         else:
             print("good heat degree and enough water for plant")
 
-    def check_water_in_tank(self):
+    def check_water_in_tank(self) -> None:
         if (not self.water_in_tank):
             raise WaterError("Not enough water in the tank!")
         else:
             print("Good enough water in the tank!")
 
 
-def test_custom_errors():
+def test_custom_errors() -> None:
 
     tomato = Plant("tomato", 10)
 
-    def create_error(plant: Plant):
+    def create_error(plant: Plant) -> None:
         plant.heat_degree = 40
         plant.water_in_tank = 0
 
@@ -48,7 +48,7 @@ def test_custom_errors():
         print("\nTesting PlantError...")
         try:
             create_error(tomato)
-            tomato.check_heat_degree()
+            tomato.check_wilting_stat()
         except PlantError as error:
             print(f"Caugth PlantError: {error}")
 
@@ -63,7 +63,7 @@ def test_custom_errors():
 
         try:
             create_error(tomato)
-            tomato.check_heat_degree()
+            tomato.check_wilting_stat()
         except GardenError as error:
             print(f"Caugth PlantError: {error}")
 
@@ -79,5 +79,5 @@ def test_custom_errors():
 
 
 if __name__ == "__main__":
-    print("=== Garden Error Types Demo ===")
+    print("=== Custom Garden Errors Demo ===")
     test_custom_errors()
