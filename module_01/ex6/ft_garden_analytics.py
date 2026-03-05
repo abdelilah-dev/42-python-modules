@@ -136,5 +136,6 @@ def main() -> None:
 
     garden_manager.manager_summary()
 
+
 if __name__ == "__main__":
     main()

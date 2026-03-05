@@ -15,23 +15,25 @@ def display_scors(scors: list[int]) -> None:
 
 if __name__ == "__main__":
     print("=== Player Score Analytics ===")
-    if len(sys.argv) > 1:
-        scores: list[int] = []
-        i = 1
-        try:
-            while i < len(sys.argv):
-                scores.append(int(sys.argv[i]))
-                i += 1
-            display_scors(scores)
-            print(f"Total players: {len(scores)}")
-            print(f"Total score: {sum(scores)}")
-            print(f"Average score: {sum(scores, 0) / len(scores)}")
-            print(f"High score: {max(scores)}")
-            print(f"Low score: {min(scores)}")
-            print(f"Score range: {max(scores) - min(scores)}")
-        except Exception as error:
-            print(error)
-    else:
-        print("No scores provided. Usage: python3",
-              f"{sys.argv[0]} <score1> <score2> ...")
-
+    try:
+        if len(sys.argv) > 1:
+            scores: list[int] = []
+            i = 1
+            try:
+                while i < len(sys.argv):
+                    scores.append(int(sys.argv[i]))
+                    i += 1
+                display_scors(scores)
+                print(f"Total players: {len(scores)}")
+                print(f"Total score: {sum(scores)}")
+                print(f"Average score: {sum(scores, 0) / len(scores)}")
+                print(f"High score: {max(scores)}")
+                print(f"Low score: {min(scores)}")
+                print(f"Score range: {max(scores) - min(scores)}")
+            except Exception as error:
+                print(error)
+        else:
+            print("No scores provided. Usage: python3",
+                  f"{sys.argv[0]} <score1> <score2> ...")
+    except Exception as error:
+        print(error)
