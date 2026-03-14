@@ -19,6 +19,8 @@ class DataProcessor(ABC):
 class NumericProcessor(DataProcessor):
     def process(self, data: Any) -> str:
         try:
+            if not data:
+                raise ValueError("Can't Processing Empty Data")
             ln = 1
             sm = data
             if data.__class__ == [].__class__:
@@ -27,8 +29,9 @@ class NumericProcessor(DataProcessor):
             avg = sm / ln
             process = f"Processed {ln} numeric values, sum={sm}, avg={avg:.1f}"
             return process
-        except (TypeError, ZeroDivisionError) as error:
-            print(f"[ERROR] - Failed To Processing {data}: {error}",
+        except (TypeError, ZeroDivisionError, ValueError) as error:
+            print("[ERROR] - Failed To Processing Numeric data",
+                  f"{data}: {error}",
                   file=stderr)
 
     def validate(self, data: Any) -> bool:
@@ -49,11 +52,14 @@ class NumericProcessor(DataProcessor):
 class TextProcessor(DataProcessor):
     def process(self, data: Any) -> str:
         try:
+            if not data:
+                raise ValueError("Can't Processing Empty Data")
             ln = len(data)
             words = len(data.split(" "))
             return f"Processed text: {ln} characters, {words} words"
-        except TypeError as error:
-            print(f"[ERROR] - Failed To Processing {data}: {error}",
+        except (TypeError, ValueError) as error:
+            print("[ERROR] Failed To Processing Text data",
+                  f"\"{data}\": {error}",
                   file=stderr)
 
     def validate(self, data: Any) -> bool:
@@ -68,6 +74,8 @@ class TextProcessor(DataProcessor):
 class LogProcessor(DataProcessor):
     def process(self, data: Any) -> str:
         try:
+            if not data:
+                raise ValueError("Can't Processing Empty Data")
             log_level = data.split(" ")[0]
             msg = None
             for item in data.split(" ")[1:]:
@@ -81,9 +89,10 @@ class LogProcessor(DataProcessor):
                 proc_result = f"[INFO] INFO level detected: {msg}"
             elif log_level == "WARNING:":
                 proc_result = f"[WARNING] WARN level detected: {msg}"
+
             return proc_result
         except ValueError as error:
-            print(f"[ERROR] - Failed To Processing {data}: {error}",
+            print(f"[ERROR] Failed To Processing log data \"{data}\": {error}",
                   file=stderr)
 
     def validate(self, data: Any) -> bool:
@@ -152,7 +161,7 @@ def processing_logs(data: Any) -> DataProcessor:
     return log_proc
 
 
-def data_processor():
+def data_processor() -> None:
     try:
         print("=== CODE NEXUS - DATA PROCESSOR FOUNDATION ===")
         num_proc = processing_numeric_data([1, 2, 3, 4, 5])
@@ -168,11 +177,13 @@ def data_processor():
         ]
         i = 0
         for proc in processors:
-            print(f"Result {i + 1} {proc.process(data[i])}")
+            result = proc.process(data[i])
+            if result:
+                print(f"Result {i + 1} {proc.process(data[i])}")
             i += 1
-        print("Foundation systems online. Nexus ready for advanced streams.")
+        print("\nFoundation systems online. Nexus ready for advanced streams.")
     except Exception as error:
-        print(f"[ERROR] - : {error}", file=stderr)
+        print(f"[ERROR] - Data Processor System Failed: {error}", file=stderr)
 
 
 if __name__ == "__main__":

@@ -33,7 +33,7 @@ def try_to_access(file_name: str) -> str:
         print(f"RESPONSE: {error}", file=sys.stderr)
 
 
-def ft_crisis_response():
+def ft_crisis_response() -> None:
     print("=== CYBER ARCHIVES - CRISIS RESPONSE SYSTEM ===")
 
     try:
