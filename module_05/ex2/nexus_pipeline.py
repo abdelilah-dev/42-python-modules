@@ -1,7 +1,7 @@
-from sys import stderr
 from typing import Any, List, Protocol
 from abc import ABC, abstractmethod
 import time
+from sys import stderr
 
 
 class ProcessingStage(Protocol):
@@ -175,7 +175,7 @@ class NexusManager():
 class RawPipeline(ProcessingPipeline):
     def process(self, data: Any) -> Any:
         if isinstance(data, dict):
-            data["state"] = "ra->processed"
+            data["state"] = "raw->processed"
         return data
 
 
@@ -264,7 +264,7 @@ def pipeline_system() -> None:
         f_record = [nexus.chain([raw_p, analy_p, st_p], r) for r in records]
         chain_time = time.time() - chain_start
 
-        stored = len([1 for r in f_record if r.get("state")])
+        stored = len([1 for r in f_record if r.get("stored")])
 
         print(f"\nChain result: {stored} records",
               "processed through 3-stage pipeline")

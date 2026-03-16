@@ -1,7 +1,8 @@
 import alchemy.elements
+import alchemy.potions
 from alchemy.elements import create_fire
 from alchemy.potions import healing_potion as heal
-from alchemy.elements import create_fire, create_water, create_earth
+from alchemy.elements import create_fire, create_water
 
 
 def importing_methods() -> None:
@@ -21,14 +22,14 @@ def importing_methods() -> None:
         print(f"heal(): {heal()}")
 
         print("\nMethod 4 - Multiple imports:")
-        print(f"create_earth(): { create_earth()}")
+        print(f"create_earth(): { alchemy.elements.create_earth()}")
         print(f"create_fire(): {create_fire()}")
-        print(f"strength_potion(): {strenght_potion()}")
+        print(f"strength_potion(): {alchemy.potions.strength_potion()}")
 
+        print("\nAll import transmutation methods mastered!")
     except OSError as error:
-        print("")
+        print(f"Failed Importing Methods - {error}")
 
 
 if __name__ == "__main__":
     importing_methods()
-    pass

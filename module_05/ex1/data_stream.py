@@ -1,6 +1,6 @@
-from sys import stderr
 from typing import Any, List, Dict, Union, Optional
 from abc import ABC, abstractmethod
+from sys import stderr
 
 
 class DataStream(ABC):
@@ -10,82 +10,105 @@ class DataStream(ABC):
 
     def filter_data(self, data_batch: List[Any],
                     criteria: Optional[str] = None) -> List[Any]:
-        ...
+        return data_batch
 
     def get_stats(self) -> Dict[str, Union[str, int, float]]:
-        return {"Stream ID": "STREAM_001", "Type": "Unknown Stream Type"}
+        return {"<Unknown Type>": "<Unknown Value>"}
 
 
 class SensorStream(DataStream):
     def __init__(self, stream_id: str) -> None:
         self.stream_id = stream_id
+        self.data: Any = None
 
     def process_batch(self, data_batch: List[Any]) -> str:
+        if not data_batch:
+            raise ValueError("Can't Processing Empty Data")
+        self.data = data_batch
+        return f"{len(data_batch)} readings processed"
+
+    def filter_data(self, data_batch: List[Any],
+                    criteria: str | None = None) -> List[Any]:
+        types = [e.split(":")[0] for e in data_batch]
+        amounts = [e.split(":")[1] for e in data_batch]
+        data_dict = {type: amount for type, amount in zip(types, amounts)}
+        if criteria == "temp":
+            return [float(data_dict[e]) for e in data_dict if e == "temp"]
+        return data_batch
+
+    def get_stats(self) -> Dict[str, str | int | float]:
         temp_avg = 0
         temp_ele = 0
-        for ele in data_batch:
+        for ele in self.data:
             if ele.split(":")[0] == "temp":
                 temp_avg += float(ele.split(":")[1])
                 temp_ele += 1
             if temp_avg:
                 temp_avg /= temp_ele
-        return f"{len(data_batch)} readings processed, avg temp: {temp_avg}"
-
-    def filter_data(self, data_batch: List[Any],
-                    criteria: str | None = None) -> List[Any]:
-        return super().filter_data(data_batch, criteria)
-
-    def get_stats(self) -> Dict[str, str | int | float]:
-        return {"Stream ID": self.stream_id, "Type": "Environmental Data"}
+        return {"avg temp": f"{temp_avg}°C"}
 
 
 class TransactionStream(DataStream):
     def __init__(self, stream_id: str) -> None:
         self.stream_id = stream_id
+        self.sell = 0
+        self.buy = 0
 
     def process_batch(self, data_batch: List[Any]) -> str:
+        if not data_batch:
+            raise ValueError("Can't Processing Empty Data")
         sell = 0
         buy = 0
         for ele in data_batch:
-            type = ele.split(":")[0]
-            if type == "buy":
+            tp = ele.split(":")[0]
+            if tp == "buy":
                 buy += int(ele.split(":")[1])
-            elif type == "sell":
+            elif tp == "sell":
                 sell += int(ele.split(":")[1])
             else:
                 raise ValueError(f"Failed To Processe Unknown data `{ele}`")
-        net_flow = buy - sell
-        if net_flow < 0:
-            net_flow = 0
         ln = len(data_batch)
-        return f"{ln} operations processed, net flow: +{net_flow} units"
+        self.sell = sell
+        self.buy = buy
+        return f"{ln} operations processed"
 
     def filter_data(self, data_batch: List[Any],
                     criteria: str | None = None) -> List[Any]:
-        return super().filter_data(data_batch, criteria)
+        if criteria == "large":
+            amount = [int(e.split(":")[1]) for e in data_batch]
+            return [e for e in amount if e > 100]
+        return data_batch
 
     def get_stats(self) -> Dict[str, str | int | float]:
-        return {"Stream ID": self.stream_id, "Type": "Financial Data"}
+        flow = self.buy - self.sell
+        return {"net flow": f"+{flow} units"}
 
 
 class EventStream(DataStream):
     def __init__(self, stream_id: str) -> None:
         self.stream_id = stream_id
+        self.data = None
 
     def process_batch(self, data_batch: List[Any]) -> str:
-        er_cnt = 0
-        for ele in data_batch:
-            if ele == "error":
-                er_cnt += 1
+        if not data_batch:
+            raise ValueError("Failed To Processe Empty Data ")
         ln = len(data_batch)
-        return f"{ln} events processed, {er_cnt} error detected"
+        self.data = data_batch
+        return f"{ln} events processed"
 
     def filter_data(self, data_batch: List[Any],
                     criteria: str | None = None) -> List[Any]:
-        return super().filter_data(data_batch, criteria)
+        if criteria == "error":
+            return [ele for ele in data_batch if ele == "error"]
+        return data_batch
 
     def get_stats(self) -> Dict[str, str | int | float]:
-        return super().get_stats()
+        er_cnt = 0
+        for event in self.data:
+            if event == "error":
+                er_cnt += 1
+
+        return {"error detected": er_cnt}
 
 
 class StreamProcessor:
@@ -95,22 +118,14 @@ class StreamProcessor:
     def add_stream(self, stream: DataStream) -> None:
         self.streams.append(stream)
 
-    def processing_batch(self, data_batch: Dict):
-        i = 0
-        for strem in self.streams:
-            if isinstance(strem, SensorStream):
-                print("- Sensor data: ", end="")
-            elif isinstance(strem, TransactionStream):
-                print("- Transaction data: ", end="")
-            elif isinstance(strem, EventStream):
-                print("- Event data: ", end="")
-
-            res = strem.process_batch(data_batch[i])
-            print(res)
-            i += 1
+    def processing_batch(self, data_batch: Dict) -> List[Any]:
+        if not data_batch or self.streams == []:
+            raise ValueError("Can't Processing Empty Data")
+        return [stm.process_batch(d) for stm, d
+                in zip(self.streams, data_batch)]
 
 
-def display_list(lst: List[Any]):
+def display_list(lst: List[Any]) -> None:
     print("[", end="")
     i = 0
     for item in lst:
@@ -131,44 +146,50 @@ def display_dictionary(dic: Dict) -> None:
     print()
 
 
-def sensor_stream_process(data: List[Any]) -> DataStream:
+def sensor_stream_process(data: List[Any]) -> Optional[DataStream]:
     try:
         print("\nInitializing Sensor Stream...")
-        sensor_proc = SensorStream("SENSOR_001")
-        sensor_stat = sensor_proc.get_stats()
-        display_dictionary(sensor_stat)
+        sensor = SensorStream("SENSOR_001")
+        print(f"Stream ID: {sensor.stream_id}, Type: Environmental Data")
         print("Processing sensor batch: ", end="")
         display_list(data)
-        print(f"Sensor analysis: {sensor_proc.process_batch(data)}")
-        return sensor_proc
+        sensor_process = sensor.process_batch(data)
+        sensor_stat = sensor.get_stats()
+        print(f"Sensor analysis: {sensor_process}, ", end="")
+        display_dictionary(sensor_stat)
+        return sensor
     except Exception as e:
         print(f"Sensor Stream Processor Failed - {e}", file=stderr)
 
 
-def transaction_stream_process(data: List[Any]) -> DataStream:
+def transaction_stream_process(data: List[Any]) -> Optional[DataStream]:
     try:
         print("\nInitializing Transaction Stream...")
         transaction_stream = TransactionStream("TRANS_001")
-        transaction_stat = transaction_stream.get_stats()
-        display_dictionary(transaction_stat)
+        print(f"Stream ID: {transaction_stream.stream_id},",
+              "Type: Financial Data")
         print("Processing transaction batch: ", end="")
         display_list(data)
-        print("Transaction analysis:",
-              f"{transaction_stream.process_batch(data)}")
+        transaction_process = transaction_stream.process_batch(data)
+        transaction_stat = transaction_stream.get_stats()
+        print(f"Transaction analysis: {transaction_process}, ", end="")
+        display_dictionary(transaction_stat)
         return transaction_stream
     except Exception as e:
         print(f"Transaction Stream Processor Failed - {e}", file=stderr)
 
 
-def event_stream_process(data: List[Any]) -> DataStream:
+def event_stream_process(data: List[Any]) -> Optional[DataStream]:
     try:
         print("\nInitializing Event Stream...")
         event_proc = EventStream("EVENT_001")
-        event_stat = event_proc.get_stats()
-        display_dictionary(event_stat)
+        print(f"Stream ID: {event_proc.stream_id}, Type: System Events")
         print("Processing event batch: ", end="")
         display_list(data)
-        print(f"Event analysis: {event_proc.process_batch(data)}")
+        event_process = event_proc.process_batch(data)
+        event_stat = event_proc.get_stats()
+        print(f"Event analysis: {event_process}, ", end="")
+        display_dictionary(event_stat)
         return event_proc
     except Exception as e:
         print(f"Event Stream Processor Failed - {e}", file=stderr)
@@ -202,7 +223,28 @@ def polymorphic_stream_system() -> None:
         stream_processor.add_stream(transaction_proc)
         stream_processor.add_stream(event_proc)
 
-        stream_processor.processing_batch(data)
+        processing_res = stream_processor.processing_batch(data)
+        i = 0
+        for stream in stream_processor.streams:
+            if isinstance(stream, SensorStream):
+                print("- Sensor data: ", end="")
+            elif isinstance(stream, TransactionStream):
+                print("- Transaction data: ", end="")
+            elif isinstance(stream, EventStream):
+                print("- Event data: ", end="")
+            print(processing_res[i])
+            i += 1
+
+        print("\nStream filtering active: High-priority data only")
+
+        criteria = ["temp", "large", "error"]
+        filterd_data = [s.filter_data(d, t) for s, d, t in
+                        zip(stream_processor.streams, data, criteria)]
+
+        print(f"Filtered results: {len(filterd_data[0])}",
+              f"critical sensor alerts, {len(filterd_data[1])}",
+              "large transaction")
+
         print("\nAll streams processed successfully.",
               "Nexus throughput optimal.")
     except Exception as e:

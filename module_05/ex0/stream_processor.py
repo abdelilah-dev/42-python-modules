@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List, Optional
 from abc import ABC, abstractmethod
 from sys import stderr
 
@@ -170,7 +170,7 @@ def data_processor() -> None:
 
         print("\n=== Polymorphic Processing Demo ===")
         processors = [num_proc, txt_proc, log_proc]
-        data = [
+        data: Optional[List | str] = [
             [1, 2, 3, 4, 5],
             "Hello Nexus World",
             "INFO: System ready"
