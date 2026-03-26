@@ -2,33 +2,39 @@ from .CreatureCard import CreatureCard
 from sys import stderr
 
 
-def test_mana_available(card, mana: int) -> None:
+def try_play_card(card, mana: int) -> None:
     playable = card.is_playable(mana)
     print(f"Playable: {playable}")
     if playable:
-        print(card.play({"name": card.name,
-                         "mana_used": card.mana_used, "effect": card.effect}))
+        print(f"Play result: {card.play(None)}")
 
 
-def datadeck_card_foundation():
+def run_card_demo():
     try:
         print("\n=== DataDeck Card Foundation ===")
 
         print("\nTesting Abstract Base Class Design:")
-        obj = CreatureCard("Fire Dragon", 5, "Legendary", 7, 5)
+
+        try:
+            card = CreatureCard("Fire Dragon", 5, "Legendary", 7, 5)
+        except ValueError as e:
+            print(f"Failed to Create Card: {e}")
+
+        mana = 6
 
         print("\nCreatureCard Info:")
-        print(obj.get_card_info())
+        print(card.get_card_info())
 
-        print("\nPlaying Fire Dragon with 6 mana available:")
-        test_mana_available(obj, 6)
+        print(f"\nPlaying Fire Dragon with {mana} mana available:")
+        try_play_card(card, mana)
 
         print("\nFire Dragon attacks Goblin Warrior:")
-        attack_res = obj.attack_target("Goblin Warrior")
-        print(f"Attack result: {attack_res}")
+        attack_result = card.attack_target("Goblin Warrior")
+        print(f"Attack result: {attack_result}")
 
-        print("\nTesting insufficient mana (3 available):")
-        test_mana_available(obj, 3)
+        mana = 3
+        print(f"\nTesting insufficient mana ({mana} available):")
+        try_play_card(card, mana)
 
         print("\nAbstract pattern successfully demonstrated!")
     except Exception as e:
@@ -36,4 +42,4 @@ def datadeck_card_foundation():
 
 
 if __name__ == "__main__":
-    datadeck_card_foundation()
+    run_card_demo()

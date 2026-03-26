@@ -15,8 +15,4 @@ class Card(ABC):
         return {key: value for key, value in self.__dict__.items()}
 
     def is_playable(self, avaible_mana: int) -> bool:
-        if (avaible_mana >= 5):
-            self.effect = "Creature summoned to battlefield"
-            self.mana_used = 5
-            return True
-        return False
+        return avaible_mana >= self.cost
